@@ -30,6 +30,8 @@ def main(argv=sys.argv):
             app.register_blueprint(vnf)
     if opts.ip_address is None:
         ip = get_ip()
+    else:
+        ip = opts.ip_address
     app.run(
             host=ip,
             port=opts.port,
