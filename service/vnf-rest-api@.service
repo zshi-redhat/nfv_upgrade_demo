@@ -1,0 +1,10 @@
+[Unit]
+Description=vnfm api service
+
+[Service]
+ExecStart=/root/flask/bin/python /root/app.py -c vnf -a %i
+
+[Install]
+WantedBy=multi-user.target
+Wants=network-online.target
+After=network-online.target
