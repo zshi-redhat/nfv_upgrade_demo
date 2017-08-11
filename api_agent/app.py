@@ -34,7 +34,7 @@ def main(argv=sys.argv):
         ip = opts.ip_address
     app.run(
             host=ip,
-            port=opts.port,
+            port=int(opts.port),
             debug=True
     )
     return 0

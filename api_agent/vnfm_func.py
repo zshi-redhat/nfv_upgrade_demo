@@ -4,10 +4,9 @@ import requests
 import socket
 import yaml
 
-OPENSTACK_AUTH = '/tmp/overcloudrc'
+OPENSTACK_AUTH = '/home/centos/upgrade_poc/overcloudrc'
 STATE_FILE = '/tmp/vnfm_state'
-VNF_INFO = '/tmp/vnf_info'
-VNF_MAPPING_INFO = '/tmp/vnf_mapping'
+DATA_FILE = '/home/centos/upgrade_poc/data_file'
 
 def vnfm_help():
     help_message = "add help messages here"
@@ -30,10 +29,10 @@ def delete_vnf(p):
 
 def create_vnf():
     try:
-        with open(VNF_INFO, 'r') as f:
+        with open(DATA_FILE, 'r') as f:
             d = yaml.load(f.read())
-            for k in d:
-                url = 'http://' + d[k] + ':' + '5001' + \
+            for k in d['vnfc_mgmt_ip']:
+                url = 'http://' + d['vnfc_mgmt_ip'][k] + ':' + '5001' + \
                       '/vnf/create'
                 requests.get(url)
         return 'Done\n'
@@ -63,15 +62,13 @@ def delete_vnfm():
 def get_vnfs(node):
     ret = {}
     try:
-        with open(VNF_MAPPING_INFO, 'r') as f:
+        with open(DATA_FILE, 'r') as f:
             d = yaml.load(f.read())
-            for k in d:
-                if d[k] == node:
-                    ret[k] = d[k]
-        with open(VNF_INFO, 'r') as f:
-            d = yaml.load(f.read())
+            for k in d['vnfc_host']:
+                if d['vnfc_host'][k] == node:
+                    ret[k] = d['vnfc_host'][k]
             for k in ret:
-                ret[k] = d[k]
+                ret[k] = d['vnfc_mgmt_ip'][k]
         return jsonify(ret)
     except IOError:
         return "[ERROR] get vnf-compute mapping error\n"
@@ -79,11 +76,11 @@ def get_vnfs(node):
 def get_pair_vnfs(p):
     ret = {}
     try:
-        with open(VNF_INFO, 'r') as f:
+        with open(DATA_FILE, 'r') as f:
             d = yaml.load(f.read())
-            for k in d:
-                if d[k] != p:
-                    ret[k] = d[k]
+            for k in d['vnfc_mgmt_ip']:
+                if d['vnfc_mgmt_ip'][k] != p:
+                    ret[k] = d['vnfc_mgmt_ip'][k]
         return jsonify(ret)
     except IOError:
         return "[ERROR] get pair vnf error"
