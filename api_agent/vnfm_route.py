@@ -27,14 +27,6 @@ def get_func_with_para(func, data):
 def route_help():
     return get_func('help')
 
-@vnfm.route('/vnfm/vnf/<func>', methods=['GET', 'POST'])
-def route_vnf_func_req(func):
-    if request.method == 'GET':
-        return get_func(func)
-    elif request.method == 'POST':
-        data = request.get_data()
-        return get_func_with_para(data)
-
 @vnfm.route('/vnfm/<func>', methods=['GET', 'POST'])
 def route_vnfm_func_req(func):
     if request.method == 'GET':
