@@ -26,7 +26,7 @@
     url: "http://{{ ip }}:5000/vnfm/get-vnfs"
     method: POST
     return_content: yes
-    body: "compute-1"
+    body: "overcloud-compute-0"
   register: vnfs
 
 - name: Debug vnfs from compute node
@@ -39,7 +39,7 @@
     method: POST
     return_content: yes
     body: "{{ inner_item.value }}"
-  with_dict: vnfs.content
+  with_dict: "{{ vnfs.content }}"
   loop_control:
     loop_var: inner_item
   register: vnf_state
@@ -60,7 +60,7 @@
     method: POST
     return_content: yes
     body: "{{ inner_item.value }}"
-  with_dict: vnfs.content
+  with_dict: "{{ vnfs.content }}"
   loop_control:
     loop_var: inner_item
   when: vnf_state.results[0].content | search('active')
@@ -71,7 +71,7 @@
     method: POST
     return_content: yes
     body: "{{ inner_item.value }}"
-  with_dict: vnfs.content
+  with_dict: "{{ vnfs.content }}"
   loop_control:
     loop_var: inner_item
   when: vnf_state.results[0].content | search('active')
@@ -84,7 +84,7 @@
     method: POST
     return_content: yes
     body: "{{ inner_item.value }}"
-  with_dict: vnf_pair.results[0].content
+  with_dict: "{{ vnf_pair.results[0].content }}"
   loop_control:
     loop_var: inner_item
   when: vnf_state.results[0].content | search('active')
