@@ -13,17 +13,17 @@ def vnfm_help():
     return help_message
 
 def switch_vnf_state(p):
-    url = 'http://' + p + ':' + '5000' + \
+    url = 'http://' + p + ':' + '5001' + \
           '/vnf/switch'
     return requests.get(url).text
 
 def get_vnf_state(p):
-    url = 'http://' + p + ':' + '5000' + \
+    url = 'http://' + p + ':' + '5001' + \
           '/vnf/state'
     return requests.get(url).text
 
 def delete_vnf(p):
-    url = 'http://' + p + ':' + '5000' + \
+    url = 'http://' + p + ':' + '5001' + \
           '/vnf/delete'
     return requests.get(url).text
 
@@ -32,7 +32,7 @@ def create_vnf():
         with open(DATA_FILE, 'r') as f:
             d = yaml.load(f.read())
             for k in d['vnfc_mgmt_ip']:
-                url = 'http://' + d['vnfc_mgmt_ip'][k] + ':' + '5000' + \
+                url = 'http://' + d['vnfc_mgmt_ip'][k] + ':' + '5001' + \
                       '/vnf/create'
                 requests.get(url)
         return 'Done\n'
