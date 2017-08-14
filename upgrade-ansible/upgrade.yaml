@@ -1,0 +1,13 @@
+---
+- hosts: 127.0.0.1
+  vars_files:
+    - vars/all.yml
+  connection: local
+  tasks:
+    - include: pre-compute-upgrade.yaml ip={{ item }}
+      with_items:
+        - "{{ a_vnfm_ip }}"
+        - "{{ b_vnfm_ip }}"
+
+    - name: Run skip-level upgrade on the first compute node
+      command: echo "running skip-level upgrade on first compute node"
