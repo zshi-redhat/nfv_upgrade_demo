@@ -12,5 +12,5 @@
     - name: Run skip level upgrade on first compute node?
       pause: prompt='Press return to continue. Press Ctrl+c and then "a" to abort'
 
-    - name: Run skip-level upgrade on the first compute node
+    - name: Run skip-level upgrade on the compute node - {{ compute_node }}
       command: echo "running skip-level upgrade on first compute node"
