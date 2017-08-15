@@ -27,6 +27,13 @@ def delete_vnf(p):
           '/vnf/delete'
     return requests.get(url).text
 
+def get_data():
+    try:
+        with open(DATA_FILE, 'r') as f:
+            return jsonify(yaml.load(f.read()))
+    except IOError:
+        return "[ERROR] error reading data file"
+
 def create_vnf():
     try:
         with open(DATA_FILE, 'r') as f:

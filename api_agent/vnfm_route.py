@@ -10,6 +10,7 @@ def get_func(func):
         'create': (create_vnfm),
         'delete': (delete_vnfm),
         'vnf-create': (create_vnf),
+        'get-data': (get_data),
     }.get(func)
     return f()
 
