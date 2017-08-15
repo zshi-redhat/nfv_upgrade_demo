@@ -7,7 +7,7 @@
     url: "http://{{ ip_addr }}:5000/vnfm/get-vnfs"
     method: POST
     return_content: yes
-    body: "overcloud-compute-0"
+    body: "{{ node }}"
   register: vnfs
 
 - name: Debug vnfs from compute node

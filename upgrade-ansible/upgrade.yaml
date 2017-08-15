@@ -4,7 +4,7 @@
     - vars/all.yml
   connection: local
   tasks:
-    - include: pre-compute.yaml ip_addr={{ item }}
+    - include: pre-compute.yaml ip_addr={{ item }} node={{ compute_node }}
       with_items:
         - "{{ a_vnfm_ip }}"
         - "{{ b_vnfm_ip }}"
