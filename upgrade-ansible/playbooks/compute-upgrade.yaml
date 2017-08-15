@@ -13,7 +13,7 @@
       pause: prompt='Press return to continue. Press Ctrl+c and then "a" to abort'
 
     - name: Running skip-level upgrade on the compute node - {{ compute_node }}
-      command: echo "running skip-level upgrade on first compute node"
+      command: echo "running skip-level upgrade on compute node"
 
     - include: post-compute.yaml ip_addr={{ item }}
       with_items:

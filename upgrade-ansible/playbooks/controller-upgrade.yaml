@@ -1,0 +1,21 @@
+---
+- hosts: 127.0.0.1
+  vars_files:
+    - ../vars/all.yml
+  connection: local
+  tasks:
+    - include: pre-controller.yaml ip_addr={{ item }} node={{ controller_node }}
+      with_items:
+        - "{{ a_vnfm_ip }}"
+        - "{{ b_vnfm_ip }}"
+
+    - name: Run skip level upgrade on {{ controller_node }}?
+      pause: prompt='Press return to continue. Press Ctrl+c and then "a" to abort'
+
+    - name: Running skip-level upgrade on the controller node - {{ controller_node }}
+      command: echo "running skip-level upgrade on controller node"
+
+    - include: post-controller.yaml ip_addr={{ item }}
+      with_items:
+        - "{{ a_vnfm_ip }}"
+        - "{{ b_vnfm_ip }}"
