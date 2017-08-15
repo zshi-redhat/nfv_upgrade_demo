@@ -1,0 +1,1 @@
+- include: health_check.yaml ip={{ ip_addr }}

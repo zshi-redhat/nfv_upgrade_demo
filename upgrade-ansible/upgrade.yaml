@@ -14,3 +14,18 @@
 
     - name: Run skip-level upgrade on the compute node - {{ compute_node }}
       command: echo "running skip-level upgrade on first compute node"
+
+    - include: post-compute.yaml ip_addr={{ item }}
+      with_items:
+        - "{{ a_vnfm_ip }}"
+        - "{{ b_vnfm_ip }}"
+
+    - include: pre-controller.yaml ip_addr={{ item }}
+      with_items:
+        - "{{ a_vnfm_ip }}"
+        - "{{ b_vnfm_ip }}"
+
+    - include: post-controller.yaml ip_addr={{ item }}
+      with_items:
+        - "{{ a_vnfm_ip }}"
+        - "{{ b_vnfm_ip }}"

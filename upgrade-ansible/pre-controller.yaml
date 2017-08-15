@@ -1,0 +1,3 @@
+# check connectivity between VNFM and Openstack
+- name: Check connectivities between VNFMs and OpenStack
+  command: echo "Check connectivity"
