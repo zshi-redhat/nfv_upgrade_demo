@@ -1,0 +1,19 @@
+- include: init.yaml ip={{ ip_addr }}
+
+- include: health_check.yaml ip={{ ip_addr }}
+
+- name: Get vnfs on running compute node
+  uri:
+    url: "http://{{ ip_addr }}:5000/vnfm/get-vnfs"
+    method: POST
+    return_content: yes
+    body: "overcloud-compute-0"
+  register: vnfs
+
+- name: Debug vnfs from compute node
+  debug: var=vnfs.content
+
+- include: switch.yaml ip={{ ip_addr }} body={{ inner_item.value }}
+  with_dict: "{{ vnfs.content }}"
+  loop_control:
+    loop_var: inner_item

@@ -1,0 +1,10 @@
+---
+- name: Get vnfm state
+  uri:
+    url: "http://{{ ip }}:5000/vnfm/state"
+    method: GET
+    return_content: yes
+  register: vnfm_state
+
+- name: Debug vnfm_state
+  debug: var=vnfm_state.content

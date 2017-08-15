@@ -1,0 +1,12 @@
+---
+- name: Initial vnfm state
+  uri:
+    url: "http://{{ ip }}:5000/vnfm/create"
+    method: GET
+    return_content: yes
+
+- name: Initial vnf state
+  uri:
+    url: "http://{{ ip }}:5000/vnfm/vnf-create"
+    method: GET
+    return_content: yes

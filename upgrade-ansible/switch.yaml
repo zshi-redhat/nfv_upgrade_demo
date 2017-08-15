@@ -1,0 +1,48 @@
+---
+- name: Debug body
+  debug: var={{ body }}
+
+- name: Get vnf state on running compute node
+  uri:
+    url: "http://{{ ip }}:5000/vnfm/vnf-state"
+    method: POST
+    return_content: yes
+    body: "{{ body }}"
+  register: vnf_state
+
+- name: Debug vnf_state
+  debug: var=vnf_state
+
+- name: Switch vnf state on running compute node to standby
+  uri:
+    url: "http://{{ ip }}:5000/vnfm/vnf-switch"
+    method: POST
+    return_content: yes
+    body: "{{ body }}"
+  when: vnf_state.content | search('active')
+
+- name: Get paired vnf
+  uri:
+    url: "http://{{ ip }}:5000/vnfm/get-pair-vnfs"
+    method: POST
+    return_content: yes
+    body: "{{ body }}"
+  when: vnf_state.content | search('active')
+  register: vnf_pair
+
+- name: Debug vnf_pair
+  debug: var=vnf_pair
+
+- name: Debug vnf_pair
+  debug: var=vnf_pair.content
+
+- name: Switch the paired vnf state to active
+  uri:
+    url: "http://{{ ip }}:5000/vnfm/vnf-switch"
+    method: POST
+    return_content: yes
+    body: "{{ sec_inner_item.value }}"
+  with_dict: "{{ vnf_pair.content }}"
+  loop_control:
+    loop_var: sec_inner_item
+  when: vnf_state.content | search('active')
