@@ -8,7 +8,8 @@ cmds=(
 'sudo cp -rf ~/nfv_upgrade_demo/service/* /etc/systemd/system/'
 )
 
-systemctl start libvirtd
+sudo yum install -y libguestfs-tools
+sudo systemctl start libvirtd
 for c in "${cmds[@]}"
 do
     echo "virt-customize -a $image --run-command ${c}"

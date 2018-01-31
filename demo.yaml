@@ -1,0 +1,182 @@
+heat_template_version: 2015-04-30
+
+description: Simple template to deploy a stack with vnf and vnfm instances
+
+parameters:
+  image_vnf: 
+    type: string 
+    label: Image Name For VNF
+    description: Specify an image name for vnf instance
+    default: centos
+  image_vnfm:
+    type: string
+    label: Image Name For VNFM
+    description: Specify an image name for vnfm instance
+    default: centos
+
+resources:
+
+  vnf_group:
+    type: OS::Nova::ServerGroup
+    properties:
+      name: vnf_group
+      policies: [anti-affinity]
+
+  vnf_flavor:
+    type: OS::Nova::Flavor
+    properties:
+      vcpus: 4
+      ram: 4096
+      disk: 50
+      extra_specs: { 'hw:cpu_policy': 'dedicated', 'hw:mem_page_size': 'large' }
+
+  vnfm_flavor:
+    type: OS::Nova::Flavor
+    properties:
+      vcpus: 4
+      ram: 4096
+      disk: 50
+
+  dpdk_network:
+    type: OS::Neutron::Net
+    properties:
+      name: net-dpdk
+      value_specs: {'provider:network_type': vlan, 'provider:segmentation_id': 216, 'provider:physical_network': dpdk}
+
+  dpdk_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      name: net-dpdk-subnet
+      network_id: { get_resource: dpdk_network }
+      cidr: 10.10.0.0/24
+      gateway_ip: 10.10.0.1
+      enable_dhcp: false
+      allocation_pools:
+        - start: 10.10.0.2
+          end: 10.10.0.50
+
+  external_network:
+    type: OS::Neutron::ProviderNet
+    properties:
+      name: external
+      network_type: flat
+      physical_network: datacentre
+      router_external: true
+
+  external_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      name: external-subnet
+      network_id: { get_resource: external_network }
+      cidr: 10.9.88.0/24
+      gateway_ip: 10.9.88.254
+      enable_dhcp: false
+      allocation_pools:
+        - start: 10.9.88.90
+          end: 10.9.88.95
+
+  internal_network:
+    type: OS::Neutron::Net
+    properties:
+      name: internal
+
+  internal_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      name: internal-subnet
+      network_id: { get_resource: internal_network }
+      cidr: 172.30.0.0/16
+      gateway_ip: 172.30.1.1
+
+  router:
+    type: OS::Neutron::Router
+    properties:
+      name: router1
+      external_gateway_info:
+        network: { get_resource: external_network }
+
+  router_interface:
+    type: OS::Neutron::RouterInterface
+    properties:
+      router_id: { get_resource: router }
+      subnet_id: { get_resource: internal_subnet }
+
+  vnf1_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: internal_network }
+      fixed_ips:
+        - subnet_id: { get_resource: internal_subnet }
+
+  vnf2_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: internal_network }
+      fixed_ips:
+        - subnet_id: { get_resource: internal_subnet }
+
+  vnf1_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: { get_resource: external_network }
+      port_id: { get_resource: vnf1_port }
+
+  vnf2_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: { get_resource: external_network }
+      port_id: { get_resource: vnf2_port }
+
+  vnf1_dpdk_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: dpdk_network }
+
+  vnf2_dpdk_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: dpdk_network }
+
+  vnfm_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: internal_network }
+      fixed_ips:
+        - subnet_id: { get_resource: internal_subnet }
+
+  vnfm_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: { get_resource: external_network }
+      port_id: { get_resource: vnfm_port }
+
+  vnf_instance1: 
+    type: OS::Nova::Server 
+    depends_on: [ vnf_flavor ]
+    properties: 
+      image: { get_param: image_vnf } 
+      scheduler_hints: { group: { get_resource: vnf_group } }
+      flavor: { get_resource: vnf_flavor}
+      networks:
+        - port : { get_resource: vnf1_dpdk_port }
+        - port : { get_resource: vnf1_port }
+
+  vnf_instance2: 
+    type: OS::Nova::Server 
+    depends_on: [ vnf_flavor ]
+    properties: 
+      image: { get_param: image_vnf } 
+      scheduler_hints: { group: { get_resource: vnf_group } }
+      flavor: { get_resource: vnf_flavor}
+      networks:
+        - port : { get_resource: vnf2_dpdk_port }
+        - port : { get_resource: vnf2_port }
+
+  vnfm_instance1: 
+    type: OS::Nova::Server 
+    depends_on: [ vnfm_flavor ]
+    properties: 
+      image: { get_param: image_vnf } 
+      flavor: { get_resource: vnfm_flavor}
+      networks:
+        - port : { get_resource: vnfm_port }
