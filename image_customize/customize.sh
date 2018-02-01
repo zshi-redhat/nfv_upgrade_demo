@@ -1,13 +1,17 @@
 #!/bin/bash
 image=$1
 cmds=(
-'cat > /etc/resolv.conf <<EOF
+'sudo yum remove cloud-init* -y'
+'sudo cat > /etc/resolv.conf <<EOF
 search dsal.lab.eng.rdu2.redhat.com
 nameserver 10.11.5.19
 nameserver 10.10.160.2
 nameserver 10.5.30.160
 EOF'
-'sudo sed -i "s/^PasswordAuthentication no/PasswordAuthentication yes/g" sshd_config '
+'sed -i "s/^PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config '
+'sudo chmod 600 /etc/ssh/sshd_config '
+'sed -i "s/^SELINUX=.*/SELINUX=disabled/g" /etc/sysconfig/selinux '
+'sed -i "s/^SELINUX=.*/SELINUX=disabled/g" /etc/selinux/config '
 'sudo yum install -y python-virtualenv git vim'
 'sudo virtualenv ~/flask'
 'source ~/flask/bin/activate; pip install flask requests request pyyaml'
@@ -22,3 +26,6 @@ do
     echo "virt-customize -a $image --run-command ${c}"
     virt-customize -a $image --run-command "${c}"
 done
+
+echo "virt-customize -a $image --root-password password:redhat"
+virt-customize -a $image --root-password password:redhat

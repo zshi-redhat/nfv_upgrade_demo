@@ -2,7 +2,7 @@
 Description=vnfm api service
 
 [Service]
-ExecStart=/root/flask/bin/python /root/nfv_upgrade_demo/api_agent/app.py -c vnf -a %i
+ExecStart=/flask/bin/python /nfv_upgrade_demo/api_agent/app.py -c vnf -a %i
 
 [Install]
 WantedBy=multi-user.target

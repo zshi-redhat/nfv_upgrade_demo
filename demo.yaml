@@ -117,6 +117,14 @@ resources:
       fixed_ips:
         - subnet_id: { get_resource: internal_subnet }
 
+  vnfm_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: internal_network }
+      port_security_enabled: false
+      fixed_ips:
+        - subnet_id: { get_resource: internal_subnet }
+
   vnf1_floating_ip:
     type: OS::Neutron::FloatingIP
     properties:
@@ -129,6 +137,12 @@ resources:
       floating_network: { get_resource: external_network }
       port_id: { get_resource: vnf2_port }
 
+  vnfm_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: { get_resource: external_network }
+      port_id: { get_resource: vnfm_port }
+
   vnf1_dpdk_port:
     type: OS::Neutron::Port
     properties:
@@ -139,19 +153,10 @@ resources:
     properties:
       network: { get_resource: dpdk_network }
 
-  vnfm_port:
+  vnfm_dpdk_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: internal_network }
-      port_security_enabled: false
-      fixed_ips:
-        - subnet_id: { get_resource: internal_subnet }
-
-  vnfm_floating_ip:
-    type: OS::Neutron::FloatingIP
-    properties:
-      floating_network: { get_resource: external_network }
-      port_id: { get_resource: vnfm_port }
+      network: { get_resource: dpdk_network }
 
   vnf_instance1: 
     type: OS::Nova::Server 
@@ -161,8 +166,8 @@ resources:
       scheduler_hints: { group: { get_resource: vnf_group } }
       flavor: { get_resource: vnf_flavor}
       networks:
-        - port : { get_resource: vnf1_dpdk_port }
         - port : { get_resource: vnf1_port }
+        - port : { get_resource: vnf1_dpdk_port }
 
   vnf_instance2: 
     type: OS::Nova::Server 
@@ -172,8 +177,8 @@ resources:
       scheduler_hints: { group: { get_resource: vnf_group } }
       flavor: { get_resource: vnf_flavor}
       networks:
-        - port : { get_resource: vnf2_dpdk_port }
         - port : { get_resource: vnf2_port }
+        - port : { get_resource: vnf2_dpdk_port }
 
   vnfm_instance1: 
     type: OS::Nova::Server 
@@ -183,3 +188,4 @@ resources:
       flavor: { get_resource: vnfm_flavor}
       networks:
         - port : { get_resource: vnfm_port }
+        - port : { get_resource: vnfm_dpdk_port }
