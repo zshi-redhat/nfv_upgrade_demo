@@ -109,6 +109,7 @@ resources:
       port_security_enabled: false
       fixed_ips:
         - subnet_id: { get_resource: internal_subnet }
+          ip_address: 172.30.0.50
 
   vnf2_port:
     type: OS::Neutron::Port
@@ -117,6 +118,7 @@ resources:
       port_security_enabled: false
       fixed_ips:
         - subnet_id: { get_resource: internal_subnet }
+          ip_address: 172.30.0.51
 
   vnfm_port:
     type: OS::Neutron::Port
@@ -125,6 +127,7 @@ resources:
       port_security_enabled: false
       fixed_ips:
         - subnet_id: { get_resource: internal_subnet }
+          ip_address: 172.30.0.100
 
   vnf1_floating_ip:
     type: OS::Neutron::FloatingIP

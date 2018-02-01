@@ -1,13 +1,6 @@
 #!/bin/bash
 image=$1
 cmds=(
-'sudo yum remove cloud-init* -y'
-'sudo cat > /etc/resolv.conf <<EOF
-search dsal.lab.eng.rdu2.redhat.com
-nameserver 10.11.5.19
-nameserver 10.10.160.2
-nameserver 10.5.30.160
-EOF'
 'sed -i "s/^PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config '
 'sudo chmod 600 /etc/ssh/sshd_config '
 'sed -i "s/^SELINUX=.*/SELINUX=disabled/g" /etc/sysconfig/selinux '

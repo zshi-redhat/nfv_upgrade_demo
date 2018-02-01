@@ -4,9 +4,9 @@ import requests
 import socket
 import yaml
 
-OPENSTACK_AUTH = '/home/centos/upgrade_poc/overcloudrc'
+OPENSTACK_AUTH = '/tmp/overcloudrc'
 STATE_FILE = '/tmp/vnfm_state'
-DATA_FILE = '/home/centos/upgrade_poc/data_file'
+DATA_FILE = '/tmp/data_file'
 
 def vnfm_help():
     help_message = "add help messages here"
