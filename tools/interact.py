@@ -2,6 +2,14 @@ import os, sys, argparse
 import subprocess
 import yaml
 
+HEADER = '\033[95m'
+OKBLUE = '\033[94m'
+OKGREEN = '\033[92m'
+WARNING = '\033[93m'
+FAIL = '\033[91m'
+ENDC = '\033[0m'
+BOLD = "\033[1m"
+
 def help_msg():
     print "\nUsage: $(basename $0) [ -a <vnfm_ip_address> ]"
     print "\t -a     \t\t vnfm ip address"
@@ -28,11 +36,11 @@ def exec_cmd(cmd):
 
 def show_vnf():
     cmd = "curl http://" + mIP + ":" + mPORT + "/vnfm/get-data"
-    print yaml.load(exec_cmd(cmd))['vnfcs']
+    print '\n' + '\t' + OKGREEN + str(yaml.load(exec_cmd(cmd))['vnfcs']) + ENDC + '\n\n'
 
 def show_ip():
     cmd = "curl http://" + mIP + ":" + mPORT + "/vnfm/get-data"
-    print yaml.load(exec_cmd(cmd))['vnfc_mgmt_ip']
+    print '\n' + '\t' + OKGREEN + str(yaml.load(exec_cmd(cmd))['vnfc_mgmt_ip']) + ENDC + '\n\n'
 
 def show_state():
     ret = {}
@@ -41,11 +49,11 @@ def show_state():
     for k in d:
         cmd = "curl http://" + d[k] + ":" + "5001" + "/vnf/state"
         ret[k] = exec_cmd(cmd)
-    print ret
+    print '\n' + '\t' + OKGREEN + str(ret) + ENDC + '\n\n'
 
 def show_host():
     cmd = "curl http://" + mIP + ":" + mPORT + "/vnfm/get-data"
-    print yaml.load(exec_cmd(cmd))['vnfc_host']
+    print '\n' + '\t' + OKGREEN + str(yaml.load(exec_cmd(cmd))['vnfc_host']) + ENDC + '\n\n'
 
 def parse_opts(argv):
     parser = argparse.ArgumentParser(
