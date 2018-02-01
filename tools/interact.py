@@ -3,9 +3,9 @@ import subprocess
 import yaml
 
 def help_msg():
-    print "\nUsage: $(basename $0) [ -m <vnfm_ip_address> ]"
-    print "\t -h     \t\t help message"
-    print "\t -m     \t\t ip address for vnfm"
+    print "\nUsage: $(basename $0) [ -a <vnfm_ip_address> ]"
+    print "\t -a     \t\t vnfm ip address"
+    print "\t -p     \t\t port num that api service is bundled to"
     print "\n"
 
 def vnfm_help_msg():

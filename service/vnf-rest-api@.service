@@ -2,7 +2,7 @@
 Description=vnfm api service
 
 [Service]
-ExecStart=/home/centos/flask/bin/python /home/centos/nfv_upgrade_demo/api_agent/app.py -c vnf -a %i
+ExecStart=/root/flask/bin/python /root/nfv_upgrade_demo/api_agent/app.py -c vnf -a %i
 
 [Install]
 WantedBy=multi-user.target

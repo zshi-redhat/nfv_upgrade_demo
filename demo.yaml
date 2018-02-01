@@ -72,8 +72,8 @@ resources:
       gateway_ip: 10.9.88.254
       enable_dhcp: false
       allocation_pools:
-        - start: 10.9.88.90
-          end: 10.9.88.95
+        - start: 10.9.88.115
+          end: 10.9.88.118
 
   internal_network:
     type: OS::Neutron::Net
@@ -105,6 +105,7 @@ resources:
     type: OS::Neutron::Port
     properties:
       network: { get_resource: internal_network }
+      port_security_enabled: false
       fixed_ips:
         - subnet_id: { get_resource: internal_subnet }
 
@@ -112,6 +113,7 @@ resources:
     type: OS::Neutron::Port
     properties:
       network: { get_resource: internal_network }
+      port_security_enabled: false
       fixed_ips:
         - subnet_id: { get_resource: internal_subnet }
 
@@ -141,6 +143,7 @@ resources:
     type: OS::Neutron::Port
     properties:
       network: { get_resource: internal_network }
+      port_security_enabled: false
       fixed_ips:
         - subnet_id: { get_resource: internal_subnet }
 
