@@ -1,8 +1,8 @@
 [Unit]
-Description=vnfm api service
+Description=vnf api service
 
 [Service]
-ExecStart=/flask/bin/python /nfv_upgrade_demo/api_agent/app.py -c vnf -a %i
+ExecStart=/flask/bin/python /nfv_upgrade_demo/api_agent/app.py -c vnf -a %i -p 5001
 
 [Install]
 WantedBy=multi-user.target

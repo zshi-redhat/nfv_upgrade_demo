@@ -36,6 +36,7 @@ resources:
       vcpus: 4
       ram: 4096
       disk: 50
+      extra_specs: { 'hw:cpu_policy': 'dedicated', 'hw:mem_page_size': 'large' }
 
   dpdk_network:
     type: OS::Neutron::Net
@@ -162,6 +163,7 @@ resources:
     type: OS::Nova::Server 
     depends_on: [ vnf_flavor ]
     properties: 
+      name: vnfc-1
       image: { get_param: image_vnf } 
       scheduler_hints: { group: { get_resource: vnf_group } }
       flavor: { get_resource: vnf_flavor}
@@ -173,6 +175,7 @@ resources:
     type: OS::Nova::Server 
     depends_on: [ vnf_flavor ]
     properties: 
+      name: vnfc-2
       image: { get_param: image_vnf } 
       scheduler_hints: { group: { get_resource: vnf_group } }
       flavor: { get_resource: vnf_flavor}
@@ -184,6 +187,7 @@ resources:
     type: OS::Nova::Server 
     depends_on: [ vnfm_flavor ]
     properties: 
+      name: vnfm
       image: { get_param: image_vnf } 
       flavor: { get_resource: vnfm_flavor}
       networks:
