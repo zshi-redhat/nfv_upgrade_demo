@@ -17,6 +17,13 @@ def switch_vnf_state():
     except IOError:
         print "[ERROR] Set state error"
     try:
+        if s =='standby':
+            os.system('ip addr flush dev eth1')
+            os.system('ip link set eth1 down')
+        else:
+            os.system('ip addr flush dev eth1')
+            os.system('ip link add 10.0.10.3/24 dev eth1')
+            os.system('ip link set eth1 up')
         with open(STATE_FILE, 'w') as f:
             f.write(s)
             f.close()
@@ -39,6 +46,8 @@ def delete_vnf():
 def create_vnf():
     try:
         f = open(STATE_FILE, 'r')
+        os.system('ip addr flush dev eth1')
+        os.system('ip link set eth1 down')
     except IOError:
         f = open(STATE_FILE, 'w')
         f.write('standby')
