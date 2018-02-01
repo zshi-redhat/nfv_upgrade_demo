@@ -166,7 +166,7 @@ resources:
     type: OS::Nova::Server 
     depends_on: [ vnf_flavor ]
     properties: 
-      name: vnfc-1
+      name: vnf1
       image: { get_param: image_vnf } 
       scheduler_hints: { group: { get_resource: vnf_group } }
       flavor: { get_resource: vnf_flavor}
@@ -178,7 +178,7 @@ resources:
     type: OS::Nova::Server 
     depends_on: [ vnf_flavor ]
     properties: 
-      name: vnfc-2
+      name: vnf2
       image: { get_param: image_vnf } 
       scheduler_hints: { group: { get_resource: vnf_group } }
       flavor: { get_resource: vnf_flavor}

@@ -2,12 +2,12 @@
 
 source overcloudrc
 
-vnfc1_ip=$(openstack server list -c Name -c Networks -f table | grep vnfc-1 | cut -d, -f2 | cut -d\; -f1)
-vnfc2_ip=$(openstack server list -c Name -c Networks -f table | grep vnfc-2 | cut -d, -f2 | cut -d\; -f1)
+vnfc1_ip=$(openstack server list -c Name -c Networks -f table | grep vnf1 | cut -d, -f2 | cut -d\; -f1)
+vnfc2_ip=$(openstack server list -c Name -c Networks -f table | grep vnf2 | cut -d, -f2 | cut -d\; -f1)
 vnfm_ip=$(openstack server list -c Name -c Networks -f table | grep vnfm | cut -d, -f2 | cut -d\; -f1)
 
-vnfc1_id=$(openstack server list -c Name -c ID -f table | grep vnfc-1 | cut -d\| -f2)
-vnfc2_id=$(openstack server list -c Name -c ID -f table | grep vnfc-2 | cut -d\| -f2)
+vnfc1_id=$(openstack server list -c Name -c ID -f table | grep vnf1 | cut -d\| -f2)
+vnfc2_id=$(openstack server list -c Name -c ID -f table | grep vnf2 | cut -d\| -f2)
 vnfm_id=$(openstack server list -c Name -c ID -f table | grep vnfm | cut -d\| -f2)
 
 if nova hypervisor-servers overcloud-novacompute-0 | grep $vnfc1_id > /dev/null; then
