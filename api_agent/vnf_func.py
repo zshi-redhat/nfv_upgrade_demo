@@ -22,7 +22,7 @@ def switch_vnf_state():
             os.system('ip link set eth1 down')
         else:
             os.system('ip addr flush dev eth1')
-            os.system('ip link add 10.0.10.3/24 dev eth1')
+            os.system('ip addr add 10.0.10.3/24 dev eth1')
             os.system('ip link set eth1 up')
         with open(STATE_FILE, 'w') as f:
             f.write(s)
