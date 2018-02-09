@@ -72,9 +72,6 @@ resources:
       cidr: 10.9.88.0/24
       gateway_ip: 10.9.88.254
       enable_dhcp: false
-      allocation_pools:
-        - start: 10.9.88.115
-          end: 10.9.88.118
 
   internal_network:
     type: OS::Neutron::Net
@@ -134,33 +131,45 @@ resources:
     properties:
       floating_network: { get_resource: external_network }
       port_id: { get_resource: vnf1_port }
+      floating_ip_address: 10.9.88.116
 
   vnf2_floating_ip:
     type: OS::Neutron::FloatingIP
     properties:
       floating_network: { get_resource: external_network }
       port_id: { get_resource: vnf2_port }
+      floating_ip_address: 10.9.88.117
 
   vnfm_floating_ip:
     type: OS::Neutron::FloatingIP
     properties:
       floating_network: { get_resource: external_network }
       port_id: { get_resource: vnfm_port }
+      floating_ip_address: 10.9.88.118
 
   vnf1_dpdk_port:
     type: OS::Neutron::Port
     properties:
       network: { get_resource: dpdk_network }
+      fixed_ips:
+        - subnet_id: { get_resource: dpdk_subnet }
+          ip_address: 10.10.0.3
 
   vnf2_dpdk_port:
     type: OS::Neutron::Port
     properties:
       network: { get_resource: dpdk_network }
+      fixed_ips:
+        - subnet_id: { get_resource: dpdk_subnet }
+          ip_address: 10.10.0.4
 
   vnfm_dpdk_port:
     type: OS::Neutron::Port
     properties:
       network: { get_resource: dpdk_network }
+      fixed_ips:
+        - subnet_id: { get_resource: dpdk_subnet }
+          ip_address: 10.10.0.10
 
   vnf_instance1: 
     type: OS::Nova::Server 
